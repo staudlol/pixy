@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group 'io.github.staudlol'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven {
+        name = 'spigot-repo'
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+}
+
+dependencies {
+    compileOnly('org.bukkit:bukkit:1.8.8-R0.1-SNAPSHOT')
+    compileOnly('org.projectlombok:lombok:1.18.24')
+
+    annotationProcessor('org.projectlombok:lombok:1.18.24')
+}
+
+publishing {
+    publications {
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
+        }
+    }
+}
+
+shadowJar {
+    archiveClassifier.set("")
+
+    archiveFileName = "pixy.jar"
+}
+
+tasks.build.dependsOn(shadowJar)
